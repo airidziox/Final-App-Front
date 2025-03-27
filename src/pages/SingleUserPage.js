@@ -3,6 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import http from "../plugins/https";
 import Post from "../components/Post";
 import useStore from "../store/main";
+import {socket} from "../socket";
 
 const SingleUserPage = () => {
 
@@ -13,7 +14,7 @@ const SingleUserPage = () => {
     const [userPosts, setUserPosts] = useState([])
 
     const navigate = useNavigate()
-    const {loggedUser} = useStore((state) => state);
+    const {loggedUser, onlineUsers, updateOnlineUsers} = useStore((state) => state);
 
     useEffect(() => {
         if (!loggedUser) {
@@ -30,15 +31,26 @@ const SingleUserPage = () => {
             })
     }, []);
 
-    async function sendMessage() {
-        const res = await http.postToken("http://localhost:2001/sendMessage", )
+    useEffect(() => {
+        socket.on("onlineUsers", (data) => {
+            console.log(data)
+            updateOnlineUsers(data)
+        })
+    },[])
 
-        if (res.error) {
-            alert(res.message)
-        } else {
-            console.log(res)
+    async function sendMessage() {
+        const messageInfo = {
+            sender: loggedUser.username,
+            receiver: params.username,
+            message: messageRef.current.value,
+            time: new Date().toLocaleString("lt-LT")
         }
+
+        const res = await http.postToken("http://localhost:2001/sendMessage", messageInfo)
+
+        alert(res.message)
     }
+
 
     return (
         <div className="container d-flex flex-column gap-4 border rounded-3 p-4 shadow">
@@ -46,7 +58,16 @@ const SingleUserPage = () => {
                 <div className="d-flex align-items-center flex-column gap-3">
                     <img className="border border-4 border-secondary border-opacity-50 rounded-4 shadow"
                          src={singleUser?.image} alt=""/>
-                    <h2>{singleUser?.username}</h2>
+                    <div className="d-flex align-items-center flex-column gap-2">
+                            <div>
+                                {onlineUsers.some(user => user.username === singleUser?.username) ?
+                                    <div className="badge rounded-pill text-bg-success">Online</div>
+                                    :
+                                    <div className="badge rounded-pill text-bg-danger">Offline</div>
+                                }
+                            </div>
+                        <h2>{singleUser?.username}</h2>
+                    </div>
                 </div>
                 <div className="d-flex align-items-center flex-column gap-3 w-100">
                     <h2>Send message to {singleUser?.username}</h2>

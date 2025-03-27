@@ -40,7 +40,7 @@ const RegisterPage = () => {
                 <input className="p-2 rounded-3" type="text" ref={usernameRef} placeholder="Username"/>
                 <input className="p-2 rounded-3" type="password" ref={passwordRef} placeholder="Password"/>
                 <input className="p-2 rounded-3" type="password" ref={passwordConfirmRef} placeholder="Confirm password"/>
-                {error && <h4 style={{color: "red"}}>{error}</h4>}
+                {error && <h4 className="btn bg-danger text-white fs-5 fw-bold">{error}</h4>}
                 <button className="btn btn-primary px-5 fs-4 fw-bold shadow" onClick={register}>Register</button>
             </div>
         </div>

@@ -2,6 +2,8 @@ import React, {useEffect, useRef} from 'react';
 import useStore from "../store/main";
 import http from "../plugins/https";
 import {useNavigate} from "react-router-dom";
+import {socket} from "../socket";
+
 
 const ProfilePage = () => {
 
@@ -10,7 +12,7 @@ const ProfilePage = () => {
     const passwordRef = useRef()
     const confirmPasswordRef = useRef()
 
-    let {loggedUser, updateLoggedUser, error, updateError} = useStore((state) => state);
+    let {loggedUser, updateLoggedUser, error, updateError, onlineUsers} = useStore((state) => state);
 
     const navigate = useNavigate()
 
@@ -19,6 +21,8 @@ const ProfilePage = () => {
             navigate("/login")
         }
     }, []);
+
+    console.log(onlineUsers)
 
 
     async function changeImage() {

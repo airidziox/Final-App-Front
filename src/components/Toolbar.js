@@ -4,10 +4,16 @@ import useStore from '../store/main';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import {socket} from "../socket";
 
 const Toolbar = () => {
 
     const {loggedUser, updateLoggedUser } = useStore((state) => state);
+
+    function logout() {
+        updateLoggedUser(null)
+        socket.disconnect();
+    }
 
     return (
         <div>
@@ -27,7 +33,7 @@ const Toolbar = () => {
                             </Navbar.Text>
                             <Nav>
                                 <Link className="logout nav-link border rounded-2" to="/login"
-                                      onClick={() => updateLoggedUser(null)}>Logout</Link>
+                                      onClick={logout}>Logout</Link>
                             </Nav>
                         </Navbar.Collapse>
                     </Container>

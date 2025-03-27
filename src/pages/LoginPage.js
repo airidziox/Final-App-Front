@@ -2,6 +2,7 @@ import React, {useRef} from 'react';
 import useStore from '../store/main';
 import {useNavigate} from "react-router-dom";
 import http from "../plugins/https";
+import {socket} from "../socket";
 
 const LoginPage = () => {
 
@@ -10,7 +11,7 @@ const LoginPage = () => {
     const usernameRef = useRef();
     const passwordRef = useRef();
 
-    const {error, updateError, updateLoggedUser, updatePosts, updateFavoritePosts } = useStore((state) => state);
+    const {error, updateError, updateLoggedUser, updatePosts, updateFavoritePosts, updateMessages } = useStore((state) => state);
 
     async function login() {
         const myUser = {
@@ -35,6 +36,8 @@ const LoginPage = () => {
             updateFavoritePosts(res.user.favorites)
             updatePosts(res.posts)
             console.log(res)
+
+            socket.emit("login", usernameRef.current.value)
         }
     }
 
@@ -44,7 +47,7 @@ const LoginPage = () => {
                 <h1>Login</h1>
                 <input className="p-2 rounded-3" type="text" ref={usernameRef} placeholder="Username"/>
                 <input className="p-2 rounded-3" type="password" ref={passwordRef} placeholder="Password"/>
-                {error && <h4 style={{color: "red"}}>{error}</h4>}
+                {error && <h4 className="btn bg-danger text-white fs-5 fw-bold">{error}</h4>}
                 <button className="btn btn-primary px-5 fs-4 fw-bold" onClick={login}>Login</button>
             </div>
 
