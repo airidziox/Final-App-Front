@@ -19,8 +19,8 @@ const FavoritePostsPage = () => {
     useEffect(() => {
         http.getToken("http://localhost:2001/favorites")
             .then(res => {
-                updateFavoritePosts(res.favorites)
-                console.log(res.favorites)
+                updateFavoritePosts(res)
+                console.log(res)
             })
     }, []);
 

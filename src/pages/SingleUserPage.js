@@ -14,29 +14,23 @@ const SingleUserPage = () => {
     const [userPosts, setUserPosts] = useState([])
 
     const navigate = useNavigate()
-    const {loggedUser, onlineUsers, updateOnlineUsers} = useStore((state) => state);
+    const {loggedUser, onlineUsers} = useStore((state) => state);
 
     useEffect(() => {
         if (!loggedUser) {
-            navigate("/login")
+            return navigate("/login")
         }
     }, []);
 
     useEffect(() => {
         http.getToken(`http://localhost:2001/singleUser/${params.username}`)
             .then(res => {
-                console.log(res)
                 setSingleUser(res.userExists)
                 setUserPosts(res.userPosts)
             })
     }, []);
 
-    useEffect(() => {
-        socket.on("onlineUsers", (data) => {
-            console.log(data)
-            updateOnlineUsers(data)
-        })
-    },[])
+    console.log(onlineUsers)
 
     async function sendMessage() {
         const messageInfo = {
@@ -60,7 +54,7 @@ const SingleUserPage = () => {
                          src={singleUser?.image} alt=""/>
                     <div className="d-flex align-items-center flex-column gap-2">
                             <div>
-                                {onlineUsers.some(user => user.username === singleUser?.username) ?
+                                {onlineUsers?.some(user => user.username === singleUser?.username) ?
                                     <div className="badge rounded-pill text-bg-success">Online</div>
                                     :
                                     <div className="badge rounded-pill text-bg-danger">Offline</div>

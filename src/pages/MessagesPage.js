@@ -13,17 +13,17 @@ const MessagesPage = () => {
 
     useEffect(() => {
         if (!loggedUser) {
-            navigate("/login")
+            return navigate("/login")
         }
     }, []);
 
     useEffect(() => {
-        http.getToken(`http://localhost:2001/singleUser/${loggedUser.username}`)
+        http.getToken(`http://localhost:2001/singleUser/${loggedUser?.username}`)
             .then(res => {
                 updateMessages(res.userExists.messages)
                 console.log(res)
             })
-    }, []);
+    }, [messages]);
 
     useEffect(() => {
         socket.on("messageReceived", (data) => {

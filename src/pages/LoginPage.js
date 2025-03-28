@@ -11,7 +11,7 @@ const LoginPage = () => {
     const usernameRef = useRef();
     const passwordRef = useRef();
 
-    const {error, updateError, updateLoggedUser, updatePosts, updateFavoritePosts, updateMessages } = useStore((state) => state);
+    const {error, updateError, updateLoggedUser} = useStore((state) => state);
 
     async function login() {
         const myUser = {
@@ -33,10 +33,11 @@ const LoginPage = () => {
                 image: res.user.image,
                 id: res.user._id,
             })
-            updateFavoritePosts(res.user.favorites)
-            updatePosts(res.posts)
             console.log(res)
 
+            if (!socket.connected) {
+                socket.connect();
+            }
             socket.emit("login", usernameRef.current.value)
         }
     }

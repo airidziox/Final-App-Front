@@ -12,18 +12,23 @@ const ProfilePage = () => {
     const passwordRef = useRef()
     const confirmPasswordRef = useRef()
 
-    let {loggedUser, updateLoggedUser, error, updateError, onlineUsers} = useStore((state) => state);
+    let {loggedUser, updateLoggedUser, error, updateOnlineUsers} = useStore((state) => state);
 
     const navigate = useNavigate()
 
     useEffect(() => {
         if (!loggedUser) {
-            navigate("/login")
+            return navigate("/login")
         }
     }, []);
 
-    console.log(onlineUsers)
-
+    useEffect(() => {
+        socket.on("onlineUsers", (data) => {
+            console.log(data)
+            updateOnlineUsers(data)
+        })
+        socket.emit('requestOnlineUsers');
+    },[])
 
     async function changeImage() {
         const image = imageRef.current.value
@@ -46,8 +51,9 @@ const ProfilePage = () => {
             return alert(res.message)
         } else {
             updateLoggedUser({...loggedUser, username: res.updatedUser.username})
-            updateError(null)
             console.log(res)
+            navigate("/login")
+            updateLoggedUser(null)
         }
     }
 

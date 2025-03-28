@@ -30,6 +30,7 @@ const SinglePostPage = () => {
         const comment = {
             postId: params.id,
             commenter: loggedUser.username,
+            commenterId: loggedUser.id,
             text: commentRef.current.value
         }
 

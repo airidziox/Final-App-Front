@@ -87,15 +87,11 @@ const Post = ({post}) => {
             <div>
                 <span className="badge rounded-pill text-bg-primary">{post.time}</span>
             </div>
-            {loggedUser.username === post.username ?
-                <div className="text-decoration-underline">{post.username}</div>
-                :
                 <Link to={`/user/${post.username}`}>
                     <div className="username p-0">{post.username}</div>
                 </Link>
-            }
             <h5>{post.description}</h5>
-            {loggedUser.username !== post.username && !favoritePosts.some(favPost => favPost._id === post._id) ?
+            {loggedUser?.username !== post.username && !favoritePosts.some(favPost => favPost._id === post._id) ?
                 <button className="btn btn-outline-dark fw-bold" onClick={addToFavorites}>Add to Favorites ⭐</button>
                 : loggedUser.username !== post.username && favoritePosts.some(favPost => favPost._id === post._id) ?
                 <button className="btn btn-danger fw-bold" onClick={removeFromFavorites}>Remove from Favorites ⭐</button>

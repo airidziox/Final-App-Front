@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import useStore from '../store/main';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
@@ -8,11 +8,16 @@ import {socket} from "../socket";
 
 const Toolbar = () => {
 
-    const {loggedUser, updateLoggedUser } = useStore((state) => state);
+    const {loggedUser, updateLoggedUser, updateOnlineUsers, onlineUsers} = useStore((state) => state);
 
     function logout() {
-        updateLoggedUser(null)
+        socket.emit('logout', loggedUser.username);
+
+        const updatedOnlineUsers = onlineUsers.filter(user => user.username !== loggedUser.username);
+        updateOnlineUsers(updatedOnlineUsers);
+
         socket.disconnect();
+        updateLoggedUser(null)
     }
 
     return (
